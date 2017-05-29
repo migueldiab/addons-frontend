@@ -7,10 +7,10 @@ import { findDOMNode } from 'react-dom';
 import { Provider } from 'react-redux';
 
 import createStore from 'amo/store';
-import { HeaderBase } from 'amo/components/Header';
-import { getFakeI18nInst } from 'tests/client/helpers';
-import translate from 'core/i18n/translate';
+import { HeaderBase, mapStateToProps } from 'amo/components/Header';
+import { setClientApp, setLang } from 'core/actions';
 import I18nProvider from 'core/i18n/Provider';
+import { getFakeI18nInst } from 'tests/client/helpers';
 
 
 class FakeChild extends React.Component {
@@ -21,17 +21,18 @@ class FakeChild extends React.Component {
 
 describe('Header', () => {
   function renderHeader({ ...props }) {
-    const MyHeader = translate({ withRef: true })(HeaderBase);
-    const initialState = { api: { clientApp: 'android', lang: 'en-GB' } };
-    const { store } = createStore(initialState);
+    const { store } = createStore();
+    store.dispatch(setClientApp('android'));
+    store.dispatch(setLang('en-GB'));
+    const fakeI18n = getFakeI18nInst();
 
     return findRenderedComponentWithType(renderIntoDocument(
       <Provider store={store}>
-        <I18nProvider i18n={getFakeI18nInst()}>
-          <MyHeader {...props} />
+        <I18nProvider i18n={fakeI18n}>
+          <HeaderBase i18n={fakeI18n} {...props} />
         </I18nProvider>
       </Provider>
-    ), MyHeader).getWrappedInstance();
+    ), HeaderBase);
   }
 
   it('renders an <h1> when isHomepage is true', () => {
@@ -58,5 +59,17 @@ describe('Header', () => {
     expect(!h1Tag).toBeTruthy();
     expect(titleLink.textContent).toEqual('Firefox Add-ons');
     expect(titleLink.tagName).toEqual('A');
+  });
+});
+
+describe('Header mapStateToProps()', () => {
+  it('maps lang to props', () => {
+    const { store } = createStore();
+    store.dispatch(setLang('en-GB'));
+    const state = store.getState();
+
+    const props = mapStateToProps(state);
+
+    expect(props.lang).toEqual('en-GB');
   });
 });

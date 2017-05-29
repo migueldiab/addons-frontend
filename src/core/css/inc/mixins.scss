@@ -237,10 +237,6 @@ $default-arrow-margin: 3px;
   &.disabled {
     @include disabled($background);
   }
-  //
-  // &.warning {
-  //   background: $warning;
-  // }
 
   &.button-start {
     border-bottom-right-radius: 0;

@@ -45,17 +45,12 @@
 .Header-top-row {
   display: flex;
   margin: 0 15px;
-  // justify-content: space-between;
   justify-content: flex-end;
 }
 
 .Header-developer-hub-link {
   @include margin-end(10px);
   margin-top: 10px;
-
-  // @include respond-to(small) {
-  //   display: none;
-  // }
 }
 
 .Header-auth-button {

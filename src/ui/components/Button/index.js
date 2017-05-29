@@ -11,9 +11,11 @@ export default class Button extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     className: PropTypes.string,
+    href: PropTypes.string,
     inverse: PropTypes.bool,
     to: PropTypes.string,
     size: PropTypes.string,
+    type: PropTypes.string,
   }
 
   static defaultProps = {
@@ -31,7 +33,7 @@ export default class Button extends React.Component {
       to,
       size,
       type,
-      ...rest,
+      ...rest
     } = this.props;
     const props = {
       className: classNames('Button', className, [
@@ -50,7 +52,7 @@ export default class Button extends React.Component {
         props.to = to;
       }
 
-      return <Link {...props}>{children}</Link>
+      return <Link {...props}>{children}</Link>;
     }
 
     return <button {...props}>{children}</button>;

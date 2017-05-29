@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import Link from 'amo/components/Link';
 import SearchForm from 'amo/components/SearchForm';
-// import SectionLinks from 'amo/components/SectionLinks';
 import AuthenticateButton from 'core/components/AuthenticateButton';
 import translate from 'core/i18n/translate';
 import Button from 'ui/components/Button';
@@ -18,8 +17,8 @@ export class HeaderBase extends React.Component {
   static propTypes = {
     i18n: PropTypes.object.isRequired,
     isHomePage: PropTypes.bool.isRequired,
+    lang: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired,
-    minimal: PropTypes.bool,
     SearchFormComponent: PropTypes.node.isRequired,
     query: PropTypes.string,
   }
@@ -27,7 +26,6 @@ export class HeaderBase extends React.Component {
   static defaultPropTypes = {
     SearchFormComponent: SearchForm,
     isHomePage: false,
-    minimal: false,
   }
 
   render() {
@@ -58,7 +56,7 @@ export class HeaderBase extends React.Component {
               base=""
               className="Header-developer-hub-link"
               href={`/${lang}/developers/`}
-              inverse={true}
+              inverse
               prefix={false}
               size="small"
               type="action"
@@ -68,7 +66,7 @@ export class HeaderBase extends React.Component {
             <AuthenticateButton
               className="Header-auth-button"
               location={location}
-              noIcon={true}
+              noIcon
               size="small"
               type="action"
             />
@@ -79,9 +77,6 @@ export class HeaderBase extends React.Component {
             ? <h1 className="Header-title-wrapper">{headerLink}</h1>
             : headerLink}
         </header>
-        {/*
-        <SectionLinks location={location} />
-        */}
         <SearchFormComponent pathname="/search/" query={query} />
       </div>
     );
