@@ -102,6 +102,13 @@ describe('<Link />', () => {
     expect(findDOMNode(root, 'a').href).toContain('/foo/test');
   });
 
+  it('does not prefix with `prefix` prop is `false`', () => {
+    const root = render({ base: '/foo/', href: '/test', prefix: false });
+
+    expect(findDOMNode(root, 'a').href).toContain('/test');
+    expect(findDOMNode(root, 'a').href).not.toContain('/foo/test');
+  });
+
   it('renders children when `href` is used', () => {
     const root = render({ base: '/foo/', children: 'bonjour', href: '/test' });
 
