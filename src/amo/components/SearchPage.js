@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { currentViewSet } from 'amo/actions/currentView';
 import Link from 'amo/components/Link';
 import Paginate from 'core/components/Paginate';
 import SearchResults from 'amo/components/SearchResults';
@@ -29,6 +30,13 @@ export default class SearchPage extends React.Component {
     filters: {},
     pathname: '/search/',
     results: [],
+  }
+
+  componentWillMount() {
+    const { dispatch, filters } = this.props;
+
+    const { addonType } = filters;
+    dispatch(currentViewSet({ addonType, isExploring: !addonType }));
   }
 
   render() {

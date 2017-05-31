@@ -23,6 +23,7 @@ import { getFakeI18nInst, shallowRender } from 'tests/client/helpers';
 
 describe('<LandingPage />', () => {
   const initialState = { api: { clientApp: 'android', lang: 'en-GB' } };
+  const fakeDispatch = sinon.stub();
 
   function render({ ...props }) {
     const { store } = createStore(initialState);
@@ -30,7 +31,8 @@ describe('<LandingPage />', () => {
     return findDOMNode(findRenderedComponentWithType(renderIntoDocument(
       <Provider store={store}>
         <I18nProvider i18n={getFakeI18nInst()}>
-          <LandingPageBase i18n={getFakeI18nInst()} {...props} />
+          <LandingPageBase dispatch={fakeDispatch} i18n={getFakeI18nInst()}
+            {...props} />
         </I18nProvider>
       </Provider>
     ), LandingPageBase));
@@ -46,10 +48,11 @@ describe('<LandingPage />', () => {
   });
 
   it('sets the links in each footer for extensions', () => {
+    const fakeDispatch = sinon.stub();
     const root = shallowRender(
-      <LandingPageBase i18n={getFakeI18nInst()} params={{
-        visibleAddonType: visibleAddonType(ADDON_TYPE_EXTENSION),
-      }} />
+      <LandingPageBase dispatch={fakeDispatch} i18n={getFakeI18nInst()}
+        params={{ visibleAddonType: visibleAddonType(ADDON_TYPE_EXTENSION) }}
+      />
     );
 
     expect(root.props.children[1].props.footerLink).toEqual({
@@ -66,10 +69,11 @@ describe('<LandingPage />', () => {
   });
 
   it('sets the links in each footer for themes', () => {
+    const fakeDispatch = sinon.stub();
     const root = shallowRender(
-      <LandingPageBase i18n={getFakeI18nInst()} params={{
-        visibleAddonType: visibleAddonType(ADDON_TYPE_THEME),
-      }} />
+      <LandingPageBase dispatch={fakeDispatch} i18n={getFakeI18nInst()}
+        params={{ visibleAddonType: visibleAddonType(ADDON_TYPE_THEME) }}
+      />
     );
 
     expect(root.props.children[1].props.footerLink).toEqual({

@@ -1,14 +1,17 @@
 import React from 'react';
 import { Simulate, renderIntoDocument } from 'react-addons-test-utils';
 
-import * as actions from 'core/actions';
-import * as coreApi from 'core/api';
+import { currentViewSet } from 'amo/actions/currentView';
 import {
   SearchFormBase,
   mapDispatchToProps,
   mapStateToProps,
 } from 'amo/components/SearchForm';
-import { getFakeI18nInst } from 'tests/client/helpers';
+import createStore from 'amo/store';
+import * as actions from 'core/actions';
+import * as coreApi from 'core/api';
+import { ADDON_TYPE_EXTENSION } from 'core/constants';
+import { getFakeI18nInst, userAuthToken } from 'tests/client/helpers';
 
 
 describe('<SearchForm />', () => {
@@ -33,7 +36,7 @@ describe('<SearchForm />', () => {
       return (
         <SearchFormBase pathname={pathname} api={api} query="foo"
           loadAddon={loadAddon} ref={(ref) => { this.root = ref; }}
-          i18n={getFakeI18nInst()} />
+          i18n={getFakeI18nInst()} {...this.props} />
       );
     }
   }
@@ -88,21 +91,47 @@ describe('<SearchForm />', () => {
     expect(router.push.called).toBeTruthy();
   });
 
+  it('passes addonType when set', () => {
+    root = renderIntoDocument(
+      <SearchFormWrapper addonType={ADDON_TYPE_EXTENSION} />
+    ).root;
+    form = root.form;
+    input = root.searchQuery.input;
+
+    expect(!router.push.called).toBeTruthy();
+    input.value = '& 26 %';
+    Simulate.click(root.submitButton);
+    expect(router.push.calledWith({
+      pathname: '/de/firefox/search/',
+      query: { q: '& 26 %', type: ADDON_TYPE_EXTENSION },
+    })).toBeTruthy();
+  });
+
   it('encodes the value of the search text', () => {
     expect(!router.push.called).toBeTruthy();
     input.value = '& 26 %';
     Simulate.click(root.submitButton);
     expect(router.push.calledWith({
       pathname: '/de/firefox/search/',
-      query: { q: '& 26 %' },
+      query: { q: '& 26 %', type: undefined },
     })).toBeTruthy();
   });
 });
 
 describe('SearchForm mapStateToProps', () => {
   it('passes the api through', () => {
-    const api = { clientApp: 'firefox', lang: 'de', token: 'someauthtoken' };
-    expect(mapStateToProps({ foo: 'bar', api })).toEqual({ api });
+    const { store } = createStore();
+    store.dispatch(actions.setAuthToken(userAuthToken()));
+    store.dispatch(actions.setClientApp('firefox'));
+    store.dispatch(actions.setLang('de'));
+    store.dispatch(currentViewSet({ addonType: 'cool' }));
+
+    const state = store.getState();
+
+    expect(mapStateToProps(state)).toEqual({
+      addonType: state.currentView.addonType,
+      api: state.api,
+    });
   });
 });
 
