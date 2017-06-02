@@ -186,7 +186,7 @@
     "deepcopy": "^0.6.3",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^13.0.0",
-    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-import": "2.3.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
