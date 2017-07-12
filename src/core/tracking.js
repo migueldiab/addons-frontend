@@ -26,7 +26,7 @@ export class Tracking {
     this.logPrefix = `[GA: ${this.enabled ? 'ON' : 'OFF'}]`;
     this.sendInitPageView = trackingSendInitPageView;
 
-    if (this.enabled) {
+    if (this.enabled && navigator.doNotTrack !== '1') {
       /* eslint-disable */
       // Snippet from Google UA docs: http://bit.ly/1O6Dsdh
       window.ga = window.ga || function() {(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
